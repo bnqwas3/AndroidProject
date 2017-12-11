@@ -1,0 +1,191 @@
+package by.bsu.simplecalendar;
+
+import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.util.Calendar;
+import java.util.Locale;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    Calendar calendar;
+    Button btnPrevMonth;
+    Button btnNextMonth;
+    LinearLayout[] weeks;
+    int currentDateDay;
+    int currentDateMonth;
+    int currentDateYear;
+    int daysInCurrentMonth;
+    int dayOfWeek;
+    int count;
+    int startsFrom;
+    TextView monthName;
+    Button[][] days;
+
+    DisplayMetrics metrics;
+    String month;
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        calendar = Calendar.getInstance();
+        createWeeks();
+        createButtons();
+        setCalendar(calendar);
+        btnPrevMonth = (Button) findViewById(R.id.btnPrevMonth);
+        btnNextMonth = (Button) findViewById(R.id.btnNextMonth);
+        btnPrevMonth.setOnClickListener(this);
+        btnNextMonth.setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onClick(View v){
+        switch(v.getId()){
+            case R.id.btnPrevMonth:
+                clearCalendar();
+                setCalendar(prevMonthCal(calendar));
+                break;
+            case R.id.btnNextMonth:
+                clearCalendar();
+                setCalendar(nextMonthCal(calendar));
+                break;
+        }
+    }
+
+
+
+    public void setCalendar(Calendar calendar){
+        this.calendar = calendar;
+        setMonthName();
+
+        currentDateDay =  calendar.get(Calendar.DAY_OF_MONTH);
+        currentDateMonth =  calendar.get(Calendar.MONTH);
+        currentDateYear = calendar.get(Calendar.YEAR);
+        daysInCurrentMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        count = 0;
+
+        startsFrom = dayOfWeek - ((currentDateDay-1)%7);
+        if(startsFrom <= 0) {
+            startsFrom+=7;
+        }
+
+        Calendar prevCal = prevMonthCal(calendar);
+        setFirstWeek(prevCal);
+        setWeeks();
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    Calendar prevMonthCal(Calendar calendar){
+        Calendar prevCalendar = Calendar.getInstance();
+        if(calendar.get(Calendar.MONTH) !=0) {
+            prevCalendar.set(calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH)-1,
+                    calendar.get(Calendar.DAY_OF_MONTH));
+        }else{
+            prevCalendar.set(
+                    calendar.get(Calendar.YEAR) - 1,
+                    11,
+                    calendar.get(Calendar.DAY_OF_MONTH));
+        }
+        return prevCalendar;
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    Calendar nextMonthCal(Calendar calendar){
+        Calendar nextCalendar = Calendar.getInstance();
+        if(calendar.get(Calendar.MONTH) !=11) {
+            nextCalendar.set(calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH)+1,
+                    calendar.get(Calendar.DAY_OF_MONTH));
+        }else{
+            nextCalendar.set(
+                    calendar.get(Calendar.YEAR) + 1,
+                    0,
+                    calendar.get(Calendar.DAY_OF_MONTH));
+        }
+        return nextCalendar;
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    public void createWeeks(){
+        weeks = new LinearLayout[6];
+        weeks[0] = (LinearLayout) findViewById(R.id.calendar_week_1);
+        weeks[1] = (LinearLayout) findViewById(R.id.calendar_week_2);
+        weeks[2] = (LinearLayout) findViewById(R.id.calendar_week_3);
+        weeks[3] = (LinearLayout) findViewById(R.id.calendar_week_4);
+        weeks[4] = (LinearLayout) findViewById(R.id.calendar_week_5);
+        weeks[5] = (LinearLayout) findViewById(R.id.calendar_week_6);
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    public void createButtons(){
+        monthName = (TextView) findViewById(R.id.textView_MonthName);
+        days = new Button[6][7];
+
+        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        buttonParams.weight = 1;
+
+        metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        for (int weekNumber = 0; weekNumber < 6; ++weekNumber) {
+            for (int dayInWeek = 0; dayInWeek < 7; dayInWeek++) {
+                final Button day = new Button(this);
+                day.setTextColor(Color.parseColor("#636161"));
+                day.setBackgroundColor(Color.TRANSPARENT);
+                day.setLayoutParams(buttonParams);
+                day.setTextSize((int) metrics.density * 20);
+                day.setSingleLine();
+                day.setTag("button");
+
+                days[weekNumber][dayInWeek] = day;
+                weeks[weekNumber].addView(day);
+            }
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    public void setMonthName(){
+        month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+        monthName.setText(month);
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    public void setFirstWeek(Calendar prevCal){
+        for(int i = 0; i < startsFrom-1; i++){
+            days[0][i].setText(String.valueOf(prevCal.getActualMaximum(Calendar.DAY_OF_MONTH)-startsFrom+i+2));
+        }
+        for(int i = startsFrom-1; i<7 ;i++){
+            count++;
+            days[0][i].setText(String.valueOf(count));
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    public void setWeeks(){
+        for(int i = 1; i < 6; i++){
+            for(int j = 0; j < 7;j++){
+                count++;
+                if(count > daysInCurrentMonth) {
+                    count = 1;
+                }
+                days[i][j].setText(String.valueOf(count));
+            }
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    public void clearCalendar(){
+        for(int i = 0 ; i < 6; i++){
+            for(int j = 0; j < 7; j++){
+                days[i][j].setText("");
+            }
+        }
+    }
+}
