@@ -9,11 +9,19 @@ public class Note {
     private int year;
     private String data;
 
+
     public Note(int day, int month, int year, String data) {
         this.day = day;
         this.month = month;
         this.year = year;
         this.data = data;
+    }
+
+    public Note(Note note){
+        this.day = note.day;
+        this.month = note.month;
+        this.year = note.year;
+        this.data = note.data;
     }
 
     public int getDay() {
@@ -46,6 +54,27 @@ public class Note {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    static Note parseNote(String str){
+        String[] strings = str.split(" ");
+        return new Note(Integer.parseInt(strings[0]),
+                Integer.parseInt(strings[1]),
+                Integer.parseInt(strings[2]),
+                strings[3]);
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder str = new StringBuilder();
+        str.append(day);
+        str.append(" ");
+        str.append(month);
+        str.append(" ");
+        str.append(year);
+        str.append(" ");
+        str.append(data);
+        return new String(str);
     }
 }
 

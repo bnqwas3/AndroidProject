@@ -1,6 +1,7 @@
 package by.bsu.simplecalendar;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,7 +12,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -19,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Calendar calendar;
     Button btnPrevMonth;
     Button btnNextMonth;
+    Button btnShowNotes;
     LinearLayout[] weeks;
     int currentDateDay;
     int currentDateMonth;
@@ -30,8 +35,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView monthName;
     Button[][] days;
 
+    Intent intent;
+
     DisplayMetrics metrics;
     String month;
+
+    List<Note> notes;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -46,7 +55,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnNextMonth = (Button) findViewById(R.id.btnNextMonth);
         btnPrevMonth.setOnClickListener(this);
         btnNextMonth.setOnClickListener(this);
+        notes = new ArrayList<>();
+    }
 
+    protected void onRestart(){
+        super.onRestart();
+//        String str = intent.getStringExtra("note");
+//        if(!str.equals("")){
+//            notes.add(Note.parseNote(str));
+//            btnShowNotes = (Button) findViewById(R.id.btnShowNotes);
+//            btnShowNotes.setText("hi");
+//        }
     }
 
     @Override
@@ -59,6 +78,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnNextMonth:
                 clearCalendar();
                 setCalendar(nextMonthCal(calendar));
+                break;
+            case R.id.btnShowNotes:
+                intent = new Intent(this, ShowNotesActivity.class);
+                startActivity(intent);
+
+        }
+        switch(String.valueOf(v.getTag())){
+            case "button":
+                Button btn = (Button) v;
+                intent = new Intent(this, InputDataActivity.class);
+                intent.putExtra("tvDayNumber", btn.getText().toString());
+                startActivity(intent);
                 break;
         }
     }
@@ -144,9 +175,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 day.setTextColor(Color.parseColor("#636161"));
                 day.setBackgroundColor(Color.TRANSPARENT);
                 day.setLayoutParams(buttonParams);
-                day.setTextSize((int) metrics.density * 20);
+                day.setTextSize((int) metrics.density * 20); 
                 day.setSingleLine();
                 day.setTag("button");
+                day.setOnClickListener(this);
 
                 days[weekNumber][dayInWeek] = day;
                 weeks[weekNumber].addView(day);

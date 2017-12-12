@@ -8,42 +8,29 @@ android:orientation="vertical">
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
     android:gravity="center_horizontal"
-    android:text="@string/field_inputNameHeadTitle">
+    android:text="@string/field_inputNote">
 </TextView>
-<TableLayout
-    android:id="@+id/tableLayout1"
+<LinearLayout
+    android:id="@+id/layoutNotes"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:stretchColumns="1">
-    <TableRow
-        android:id="@+id/tableRow1"
+    <TextView
+        android:id="@+id/tvNoteDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/etNoteContent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/etFName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp">
-            <requestFocus>
-            </requestFocus>
-        </EditText>
-    </TableRow>
-    <TableRow
-        android:id="@+id/tableRow2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/etLName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp">
-        </EditText>
-    </TableRow>
-</TableLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp">
+        <requestFocus>
+        </requestFocus>
+    </EditText>
+</LinearLayout>
 <Button
-    android:id="@+id/btnSubmitPerson"
+    android:id="@+id/btnSubmitNote"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
