@@ -13,5 +13,6 @@
     <string name="field_note1">note: </string>
     <string name="btnAddNote">Add note</string>
     <string name="monthName">month</string>
-    <string name="showNotes">show notes</string>
+    <string name="btnShowNotes">show notes</string>
+    <string name="tvAmount">Amount of notes:</string>
 </resources>

@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     DisplayMetrics metrics;
     String month;
 
-    List<Note> notes;
+
+    static List<Note> notes= new ArrayList<>();
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -53,19 +54,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setCalendar(calendar);
         btnPrevMonth = (Button) findViewById(R.id.btnPrevMonth);
         btnNextMonth = (Button) findViewById(R.id.btnNextMonth);
+        btnShowNotes = (Button) findViewById(R.id.btnShowNotes);
         btnPrevMonth.setOnClickListener(this);
         btnNextMonth.setOnClickListener(this);
-        notes = new ArrayList<>();
-    }
+        btnShowNotes.setOnClickListener(this);
+        intent = getIntent();
+        String str = intent.getStringExtra("note");
+        if(str!=null) {
+            notes.add(Note.parseNote(str));
+        }
 
-    protected void onRestart(){
-        super.onRestart();
-//        String str = intent.getStringExtra("note");
-//        if(!str.equals("")){
-//            notes.add(Note.parseNote(str));
-//            btnShowNotes = (Button) findViewById(R.id.btnShowNotes);
-//            btnShowNotes.setText("hi");
-//        }
     }
 
     @Override
@@ -81,7 +79,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnShowNotes:
                 intent = new Intent(this, ShowNotesActivity.class);
+                StringBuilder notesStringBld = new StringBuilder();
+                notesStringBld.append(notes.size());
+                notesStringBld.append("|");
+                for(int i = 0; i < notes.size(); i++){
+                    notesStringBld.append(notes.get(i).toString());
+                    notesStringBld.append("|");
+                }
+                String notesString = new String(notesStringBld);
+                intent.putExtra("allNotes",notesString);
                 startActivity(intent);
+                break;
 
         }
         switch(String.valueOf(v.getTag())){

@@ -17,6 +17,13 @@ public class Note {
         this.data = data;
     }
 
+    public Note(){
+        this.day = 0;
+        this.month = 0;
+        this.year = 0;
+        this.data = "";
+    }
+
     public Note(Note note){
         this.day = note.day;
         this.month = note.month;
@@ -56,8 +63,23 @@ public class Note {
         this.data = data;
     }
 
+    public String getFullString(){
+        StringBuilder str = new StringBuilder();
+        str.append("Date: ");
+        str.append(year);
+        str.append(".");
+        str.append(month);
+        str.append(".");
+        str.append(day);
+        str.append(", note: ");
+        str.append(data);
+        return new String(str);
+    }
     static Note parseNote(String str){
-        String[] strings = str.split(" ");
+        String[] strings = str.split("\\^");
+        if(strings.length < 4){
+            return null;
+        }
         return new Note(Integer.parseInt(strings[0]),
                 Integer.parseInt(strings[1]),
                 Integer.parseInt(strings[2]),
@@ -68,11 +90,11 @@ public class Note {
     public String toString(){
         StringBuilder str = new StringBuilder();
         str.append(day);
-        str.append(" ");
+        str.append("^");
         str.append(month);
-        str.append(" ");
+        str.append("^");
         str.append(year);
-        str.append(" ");
+        str.append("^");
         str.append(data);
         return new String(str);
     }
