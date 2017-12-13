@@ -15,6 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     static List<Note> notes= new ArrayList<>();
 
-    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +63,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(str!=null) {
             notes.add(Note.parseNote(str));
         }
+        String toRemove = intent.getStringExtra("indexesToRemove");
+        if(toRemove!=null && !toRemove.equals("")) {
+            String[] arrToRemove = toRemove.split(" ");
+            System.out.println(toRemove);
+            for (String indexToRemove : arrToRemove) {
+                System.out.println(indexToRemove);
+                notes.remove(Integer.parseInt(indexToRemove));
+            }
+        }
 
     }
 
@@ -79,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnShowNotes:
                 intent = new Intent(this, ShowNotesActivity.class);
+                Collections.sort(notes, new SortByDate());
                 StringBuilder notesStringBld = new StringBuilder();
                 notesStringBld.append(notes.size());
                 notesStringBld.append("|");

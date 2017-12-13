@@ -34,7 +34,6 @@ public class InputDataActivity extends Activity implements View.OnClickListener 
         switch(v.getId()) {
             case R.id.btnSubmitNote:
                 Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
                 Note note = new Note(Integer.parseInt(dayNumber), 5, 2017, etNoteContent.getText().toString());
                 intent.putExtra("note", note.toString());
                 startActivity(intent);

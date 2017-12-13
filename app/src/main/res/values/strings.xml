@@ -15,4 +15,8 @@
     <string name="monthName">month</string>
     <string name="btnShowNotes">show notes</string>
     <string name="tvAmount">Amount of notes:</string>
+    <string name="btnBack">Back</string>
+    <string name="removeButton">remove</string>
+    <item type="id" name="btnRemove" />
+    <item type="id" name="btnRemoveNumber" />
 </resources>
