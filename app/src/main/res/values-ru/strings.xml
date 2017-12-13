@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SimpleCalendar</string>
+    <string name="sunday">Вс</string>
+    <string name="monday">Пн</string>
+    <string name="tuesday">Вт</string>
+    <string name="wednesday">Ср</string>
+    <string name="thursday">Чт</string>
+    <string name="friday">Пт</string>
+    <string name="saturday">Сб</string>
+    <string name="btnPrevMonth">пред.</string>
+    <string name="btnNextMonth">след.</string>
+    <string name="field_inputNote">Заметка</string>
+    <string name="field_note1">заметка:</string>
+    <string name="btnAddNote">Добавить</string>
+    <string name="monthName">месяц</string>
+    <string name="btnShowNotes">показать</string>
+    <string name="tvAmount">"количество записей: "</string>
+    <string name="btnBack">назад</string>
+    <string name="removeButton">удалить</string>
+    <string name="aid_currentDate">Дата:</string>
+</resources>

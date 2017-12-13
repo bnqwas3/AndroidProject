@@ -6,16 +6,19 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -42,16 +45,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String month;
 
 
-    static List<Note> notes= new ArrayList<>();
+    static List<Note> notes= new LinkedList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d("myLogs", "mainActivity onCreate");
         calendar = Calendar.getInstance();
         createWeeks();
         createButtons();
         setCalendar(calendar);
+        Log.d("myLogs","setCalendar");
         btnPrevMonth = (Button) findViewById(R.id.btnPrevMonth);
         btnNextMonth = (Button) findViewById(R.id.btnNextMonth);
         btnShowNotes = (Button) findViewById(R.id.btnShowNotes);
@@ -59,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnNextMonth.setOnClickListener(this);
         btnShowNotes.setOnClickListener(this);
         intent = getIntent();
+        Log.d("myLogs","getIntent");
         String str = intent.getStringExtra("note");
         if(str!=null) {
             notes.add(Note.parseNote(str));
@@ -68,10 +74,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String[] arrToRemove = toRemove.split(" ");
             System.out.println(toRemove);
             for (String indexToRemove : arrToRemove) {
-                System.out.println(indexToRemove);
-                notes.remove(Integer.parseInt(indexToRemove));
+                if(Integer.parseInt(indexToRemove)<notes.size()) {
+                    Log.d("myLogs","remove skipped");
+                    Log.d("arrayToRemove: ",toRemove);
+                    Log.d("IndexToRemove: ",indexToRemove);
+                    for(int i = 0; i < notes.size(); i++){
+                        Log.d("number of note: ",String.valueOf(i));
+                        Log.d("notes",String.valueOf(notes.get(i)));
+                    }
+                    notes.remove(Integer.parseInt(indexToRemove));
+                }
             }
         }
+        Log.d("myLogs", "notesRemoved");
 
     }
 
@@ -79,14 +94,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v){
         switch(v.getId()){
             case R.id.btnPrevMonth:
+                Log.d("myLogs","prev month pressed");
                 clearCalendar();
                 setCalendar(prevMonthCal(calendar));
                 break;
             case R.id.btnNextMonth:
+                Log.d("myLogs","next month pressed");
                 clearCalendar();
                 setCalendar(nextMonthCal(calendar));
                 break;
             case R.id.btnShowNotes:
+                Log.d("myLogs", "show notes pressed");
                 intent = new Intent(this, ShowNotesActivity.class);
                 Collections.sort(notes, new SortByDate());
                 StringBuilder notesStringBld = new StringBuilder();
@@ -104,9 +122,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         switch(String.valueOf(v.getTag())){
             case "button":
+                Log.d("myLogs", "some date pressed");
                 Button btn = (Button) v;
                 intent = new Intent(this, InputDataActivity.class);
                 intent.putExtra("tvDayNumber", btn.getText().toString());
+                intent.putExtra("tvMonthNumber",String.valueOf(calendar.get(Calendar.MONTH)));
+                intent.putExtra("tvYearNumber",String.valueOf(calendar.get(Calendar.YEAR)));
                 startActivity(intent);
                 break;
         }
@@ -115,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void setCalendar(Calendar calendar){
+        Log.d("myLogs","setCalendar call");
         this.calendar = calendar;
         setMonthName();
 

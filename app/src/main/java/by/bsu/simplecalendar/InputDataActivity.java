@@ -14,6 +14,8 @@ public class InputDataActivity extends Activity implements View.OnClickListener 
     Button btnSubmit;
 
     String dayNumber;
+    String monthNumber;
+    String yearNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +28,10 @@ public class InputDataActivity extends Activity implements View.OnClickListener 
 
         Intent intent = getIntent();
         dayNumber = intent.getStringExtra("tvDayNumber");
-        tvDayNumber.setText(dayNumber);
+        monthNumber = intent.getStringExtra("tvMonthNumber");
+        yearNumber = intent.getStringExtra("tvYearNumber");
+        String dateToShow = dayNumber+"."+monthNumber+"."+yearNumber;
+        tvDayNumber.setText(dateToShow);
     }
 
     @Override
@@ -34,7 +39,8 @@ public class InputDataActivity extends Activity implements View.OnClickListener 
         switch(v.getId()) {
             case R.id.btnSubmitNote:
                 Intent intent = new Intent(this, MainActivity.class);
-                Note note = new Note(Integer.parseInt(dayNumber), 5, 2017, etNoteContent.getText().toString());
+                Note note = new Note(Integer.parseInt(dayNumber), Integer.parseInt(monthNumber),
+                        Integer.parseInt(yearNumber), etNoteContent.getText().toString());
                 intent.putExtra("note", note.toString());
                 startActivity(intent);
                 break;
